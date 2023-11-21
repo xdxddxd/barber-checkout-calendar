@@ -1,75 +1,78 @@
 import { useState, useEffect, useRef } from 'react';
-import MapView, { Marker } from 'react-native-maps';
-import { View } from 'react-native';
 import {
-    requestForegroundPermissionsAsync,
-    getCurrentPositionAsync,
-    LocationObject,
-    watchPositionAsync,
-    LocationAccuracy
-} from 'expo-location';
+    View,
+    Text,
+    Image,
+    TouchableOpacity,
+    TextInput
+} from 'react-native';
+import { Feather } from '@expo/vector-icons';
 
-import { styles } from '../../../styles';
+import * as Animatable from 'react-native-animatable';
+
+import { useNavigation } from '@react-navigation/native';
+
+import { styles } from './styles';
 
 export default function SignInScreen() {
-    const [location, setLocation] = useState<LocationObject | null>(null);
+    const [showPassword, setShowPassword] = useState<boolean>(true);
 
-    const mapRef = useRef<MapView>(null);
-
-    async function requestLocationPermission() {
-        const { granted } = await requestForegroundPermissionsAsync();
-
-        if (granted) {
-            const currentPosition = await getCurrentPositionAsync();
-            setLocation(currentPosition);
-        }
-    }
-
-    useEffect(() => {
-        requestLocationPermission();
-    }, []);
-
-    useEffect(() => {
-        watchPositionAsync({
-            accuracy: LocationAccuracy.Highest,
-            timeInterval: 1000,
-            distanceInterval: 1
-        }, (response) => {
-            setLocation(response);
-            mapRef.current?.animateCamera({
-                pitch: 45,
-                center: response.coords,
-            })
-        });
-    }, []);
+    const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
-
-            {
-                location &&
-                <MapView
-                    ref={mapRef}
-                    style={styles.map}
-                    initialRegion={{
-                        latitude: location.coords.latitude,
-                        longitude: location.coords.longitude,
-                        latitudeDelta: 0.015,
-                        longitudeDelta: 0.015
-                    }}
-                >
-                    <Marker
-                        coordinate={{
-                            latitude: location.coords.latitude,
-                            longitude: location.coords.longitude
-                        }}
-                        title="Você"
-                        description="Você está aqui"
+            <View style={styles.containerLogo}>
+                <Animatable.Image
+                    animation="flipInY"
+                    source={require('../../assets/logo.png')}
+                    style={{ width: '100%' }}
+                    resizeMode='contain'
+                />
+            </View>
+            <Animatable.View animation="fadeInUp" delay={500} style={styles.containerForm}>
+                <View style={styles.containerInput}>
+                    <Text style={styles.textInput}>Email</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Digite seu email"
+                        placeholderTextColor="#a1a1a1"
                     />
-                </MapView>
-            }
-
+                </View>
+                <View style={styles.containerInput}>
+                    <Text style={styles.textInput}>Senha</Text>
+                    <TextInput
+                        style={styles.input}
+                        placeholder="Digite sua senha"
+                        placeholderTextColor="#a1a1a1"
+                        secureTextEntry={showPassword}
+                    />
+                    <TouchableOpacity
+                        style={styles.showPasswordButton}
+                        onPress={() => setShowPassword(!showPassword)}
+                    >
+                        <Feather name={showPassword ? "eye-off" : "eye"} size={24} color="black" />
+                    </TouchableOpacity>
+                </View>
+                <View style={styles.buttonsView}>
+                    <TouchableOpacity style={styles.loginButton}>
+                        <Text style={styles.textLoginButton}>Entrar</Text>
+                    </TouchableOpacity>
+                    <View style={styles.moreButtonsView}>
+                        <TouchableOpacity
+                            onPress={() => navigation.navigate('SignUp')}
+                            style={styles.moreButton}
+                        >
+                            <Text style={styles.textMoreButton}>Fazer Cadastro</Text>
+                        </TouchableOpacity>
+                        {/* <TouchableOpacity
+                            onPress={() => navigation.navigate('ReadQrCode')}
+                            style={styles.moreButton}
+                        >
+                            <Text style={styles.textMoreButton}>Ler QRCode</Text>
+                        </TouchableOpacity> */}
+                    </View>
+                </View>
+            </Animatable.View>
         </View>
     );
 }
-
