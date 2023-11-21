@@ -1,37 +1,20 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { View, ActivityIndicator } from 'react-native';
+
+import { useAuth } from '../contexts/auth';
 
 import DrawerRoutes from './drawer.routes';
-
-import SignInScreen from '../screens/SignInScreen';
-import SignUpScreen from '../screens/SignUpScreen';
-import ReadQrCode from '../screens/ReadQrCode';
-
-const Stack = createNativeStackNavigator();
-
-const getIsSignedIn = () => {
-    // custom logic
-    return false;
-};
+import AuthRoutes from './auth.routes';
 
 export default function Routes() {
-    const isSignedIn = getIsSignedIn();
+    const { signed, loading } = useAuth();
 
-    return (
-        <NavigationContainer>
-            {isSignedIn ? (
-                <>
-                    <DrawerRoutes />
-                </>
-            ) : (
-                <>
-                    <Stack.Navigator screenOptions={{ headerShown: false }}>
-                        <Stack.Screen name="SignIn" component={SignInScreen} />
-                        <Stack.Screen name="SignUp" component={SignUpScreen} />
-                        <Stack.Screen name="ReadQrCode" component={ReadQrCode} />
-                    </Stack.Navigator>
-                </>
-            )}
-        </NavigationContainer>
-    );
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#000" />
+            </View>
+        );
+    }
+
+    return signed ? <DrawerRoutes /> : <AuthRoutes />;
 }

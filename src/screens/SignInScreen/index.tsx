@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import {
     View,
     Text,
@@ -7,17 +7,26 @@ import {
     TextInput
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-
 import * as Animatable from 'react-native-animatable';
-
 import { useNavigation } from '@react-navigation/native';
 
 import { styles } from './styles';
+import {useAuth} from '../../contexts/auth';
 
 export default function SignInScreen() {
     const [showPassword, setShowPassword] = useState<boolean>(true);
+    const [email, setEmail] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
+
+    const { signed, signIn } = useAuth();
+    console.log(signed);
 
     const navigation = useNavigation();
+
+    function handleSignIn() {
+        if(!email || !password) return alert('Preencha todos os campos');
+        signIn({email, password});
+    }
 
     return (
         <View style={styles.container}>
@@ -36,6 +45,7 @@ export default function SignInScreen() {
                         style={styles.input}
                         placeholder="Digite seu email"
                         placeholderTextColor="#a1a1a1"
+                        value={email} onChangeText={text => setEmail(text)}
                     />
                 </View>
                 <View style={styles.containerInput}>
@@ -45,6 +55,7 @@ export default function SignInScreen() {
                         placeholder="Digite sua senha"
                         placeholderTextColor="#a1a1a1"
                         secureTextEntry={showPassword}
+                        value={password} onChangeText={text => setPassword(text)}
                     />
                     <TouchableOpacity
                         style={styles.showPasswordButton}
@@ -54,7 +65,10 @@ export default function SignInScreen() {
                     </TouchableOpacity>
                 </View>
                 <View style={styles.buttonsView}>
-                    <TouchableOpacity style={styles.loginButton}>
+                    <TouchableOpacity
+                        style={styles.loginButton}
+                        onPress={handleSignIn}
+                    >
                         <Text style={styles.textLoginButton}>Entrar</Text>
                     </TouchableOpacity>
                     <View style={styles.moreButtonsView}>
