@@ -1,8 +1,7 @@
 import { Text } from 'react-native';
-import { styles } from './styles';
 
 export default function Title(props: { title: string }) {
     return (
-        <Text style={styles.title}>{props.title}</Text>
+        <Text className='m-4 text-3xl font-semibold text-gray-800 dark:text-gray-200'>{props.title}</Text>
     );
 }

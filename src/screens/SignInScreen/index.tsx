@@ -79,9 +79,9 @@ export default function SignInScreen() {
                             <Text style={styles.textMoreButton}>Fazer Cadastro</Text>
                         </TouchableOpacity>
                         {/* <TouchableOpacity
-                            onPress={() => navigation.navigate('ReadQrCode')}
-                            style={styles.moreButton}
-                        >
+                                onPress={() => navigation.navigate('ReadQrCode')}
+                                style={styles.moreButton}
+                            >
                             <Text style={styles.textMoreButton}>Ler QRCode</Text>
                         </TouchableOpacity> */}
                     </View>

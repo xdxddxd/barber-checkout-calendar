@@ -26,6 +26,11 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
+    "extra": {
+      "eas": {
+        "projectId": "e957a1b9-0ad3-4948-a44a-277a8248d75e"
+      }
+    },
     "plugins": [
       [
         "expo-camera",

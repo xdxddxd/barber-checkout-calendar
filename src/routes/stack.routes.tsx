@@ -11,5 +11,6 @@ export default function StackRoutes() {
         <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen name="home" component={Profile} />
         </Stack.Navigator>
+        
     );
 }
